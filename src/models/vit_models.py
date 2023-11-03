@@ -186,8 +186,8 @@ class ViT(nn.Module):
 
         # Reshape embedding: cls + prompt + patch -> patch
         cls = x[:,0:1,:]
-        prompt = x[:,1:51,:]
-        x = x[:,51:,:] # (32,196,768)
+        prompt = x[:,1:self.cfg.MODEL.PROMPT.NUM_TOKENS,:]
+        x = x[:,self.cfg.MODEL.PROMPT.NUM_TOKENS:,:] # (32,196,768)
         x = einops.rearrange(x, 'b (h w) d -> b d h w', h=14, w=14)
         x = self.head(x)
 
