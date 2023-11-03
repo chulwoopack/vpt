@@ -160,10 +160,13 @@ class PromptedVisionTransformer(VisionTransformer):
     def forward(self, x, vis=False):
         x, attn_weights = self.transformer(x)
 
-        x = x[:, 0]
+        # cls token
+        # x = x[:, 0]
 
-        logits = self.head(x)
+        # logits = self.head(x)
 
-        if not vis:
-            return logits
-        return logits, attn_weights
+        # if not vis:
+        #     return logits
+        # return logits, attn_weights
+
+        return x
