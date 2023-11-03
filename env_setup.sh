@@ -7,6 +7,7 @@ pip install tfds-nightly==4.4.0.dev202201080107
 pip install opencv-python
 pip install tensorflow-addons
 pip install mock
+pip install einops
 
 
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
