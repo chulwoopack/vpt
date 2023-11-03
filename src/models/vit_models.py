@@ -158,7 +158,8 @@ class ViT(nn.Module):
             
     # Change head to conduct segmentation
     def setup_head(self, cfg):
-        pass
+        self.head = nn.ConvTranspose2d(768,1,16,16)
+        
         # self.head = MLP(
         #     input_dim=self.feat_dim,
         #     mlp_dims=[self.feat_dim] * self.cfg.MODEL.MLP_NUM + \
@@ -182,7 +183,13 @@ class ViT(nn.Module):
 
         if return_feature:
             return x, x
-        # x = self.head(x)
+
+        # Reshape embedding: cls + prompt + patch -> patch
+        cls = x[:,0:1,:]
+        prompt = x[:,1:51,:]
+        x = x[:,51:,:] # (32,196,768)
+        x = einops.rearrange(x, 'b (h w) d -> b d h w', h=14, w=14)
+        x = self.head(x)
 
         return x
     
