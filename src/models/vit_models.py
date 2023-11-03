@@ -158,14 +158,12 @@ class ViT(nn.Module):
             
     # Change head to conduct segmentation
     def setup_head(self, cfg):
-        # self.head = 
-        
-        # self.head = MLP(
-        #     input_dim=self.feat_dim,
-        #     mlp_dims=[self.feat_dim] * self.cfg.MODEL.MLP_NUM + \
-        #         [cfg.DATA.NUMBER_CLASSES], # noqa
-        #     special_bias=True
-        # )
+        self.head = MLP(
+            input_dim=self.feat_dim,
+            mlp_dims=[self.feat_dim] * self.cfg.MODEL.MLP_NUM + \
+                [cfg.DATA.NUMBER_CLASSES], # noqa
+            special_bias=True
+        )
 
     def forward(self, x, return_feature=False):
         if self.side is not None:
@@ -183,7 +181,7 @@ class ViT(nn.Module):
 
         if return_feature:
             return x, x
-        x = self.head(x)
+        # x = self.head(x)
 
         return x
     
