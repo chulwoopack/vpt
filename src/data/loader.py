@@ -7,7 +7,7 @@ from torch.utils.data.sampler import RandomSampler
 
 from ..utils import logging
 from .datasets.json_dataset import (
-    CUB200Dataset, CarsDataset, DogsDataset, FlowersDataset, NabirdsDataset
+    CUB200Dataset, CarsDataset, DogsDataset, FlowersDataset, NabirdsDataset, ADE20KDataset
 )
 
 logger = logging.get_logger("visual_prompt")
@@ -17,6 +17,7 @@ _DATASET_CATALOG = {
     'StanfordCars': CarsDataset,
     'StanfordDogs': DogsDataset,
     "nabirds": NabirdsDataset,
+    "ADE20K" : ADE20KDataset,
 }
 
 
