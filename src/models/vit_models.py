@@ -6,6 +6,7 @@ Note: models return logits instead of prob
 """
 import torch
 import torch.nn as nn
+import einops
 
 from collections import OrderedDict
 from torchvision import models
