@@ -1,5 +1,5 @@
-conda create -n prompt python=3.7
-conda activate prompt
+# conda create -n prompt python=3.7
+# conda activate prompt
 
 pip install -q tensorflow
 # specifying tfds versions is important to reproduce our results
@@ -10,15 +10,17 @@ pip install mock
 pip install einops
 
 
-conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
+# conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
 
 python -m pip install detectron2 -f \
 https://dl.fbaipublicfiles.com/detectron2/wheels/cu110/torch1.7/index.html
 pip install opencv-python
 
-conda install tqdm pandas matplotlib seaborn scikit-learn scipy simplejson termcolor
-conda install -c iopath iopath
-
+# conda install tqdm pandas matplotlib seaborn scikit-learn scipy simplejson termcolor
+# conda install -c iopath iopath
+pip install tqdm pandas matplotlib seaborn scikit-learn scipy simplejson termcolor
+pip install iopath
+pip install fvcore
 
 # for transformers
 pip install timm==0.4.12
