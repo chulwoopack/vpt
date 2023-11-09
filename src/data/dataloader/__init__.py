@@ -1,7 +1,7 @@
 from .ade import ADE20KSegmentation
 
 datasets = {
-    'ADE20K': ADE20KSegmentation,
+    'ade20k': ADE20KSegmentation,
     # 'pascal_voc': VOCSegmentation,
     # 'pascal_aug': VOCAugSegmentation,
     # 'coco': COCOSegmentation,

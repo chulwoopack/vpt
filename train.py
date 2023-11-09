@@ -4,6 +4,7 @@ major actions here: fine-tune the features and evaluate different settings
 """
 import os
 import torch
+import torch.utils.data as data
 import warnings
 
 import numpy as np
@@ -14,7 +15,8 @@ from random import randint
 
 import src.utils.logging as logging
 from src.configs.config import get_cfg
-from src.data import loader as data_loader
+#from src.data import loader as data_loader
+from src.data.dataloader import get_segmentation_dataset
 from src.engine.evaluator import Evaluator
 from src.engine.trainer import Trainer
 from src.models.build_model import build_model
@@ -66,19 +68,27 @@ def setup(args):
 def get_loaders(cfg, logger):
     logger.info("Loading training data (final training data for vtab)...")
     if cfg.DATA.NAME.startswith("vtab-"):
-        train_loader = data_loader.construct_trainval_loader(cfg)
+        # train_loader = data_loader.construct_trainval_loader(cfg)
+        return NotImplemented
     else:
-        train_loader = data_loader.construct_train_loader(cfg)
+        # train_loader = data_loader.construct_train_loader(cfg)
+        train_dataset = get_segmentation_dataset(cfg.DATA.NAME,root=cfg.DATA.DATAPATH,split='train',mode='train')
+        train_loader = data.DataLoader(dataset=train_dataset)
 
     logger.info("Loading validation data...")
     # not really needed for vtab
-    val_loader = data_loader.construct_val_loader(cfg)
+    # val_loader = data_loader.construct_val_loader(cfg)
+    val_dataset = get_segmentation_dataset(cfg.DATA.NAME,root=cfg.DATA.DATAPATH,split='val',mode='train')
+    val_loader = data.DataLoader(dataset=val_dataset)
+
     logger.info("Loading test data...")
     if cfg.DATA.NO_TEST:
         logger.info("...no test data is constructed")
         test_loader = None
     else:
-        test_loader = data_loader.construct_test_loader(cfg)
+        # test_loader = data_loader.construct_test_loader(cfg)
+        test_dataset = get_segmentation_dataset(cfg.DATA.NAME,root=cfg.DATA.DATAPATH,split='test',mode='test')
+        test_loader = data.DataLoader(dataset=val_dataset)
     return train_loader,  val_loader, test_loader
 
 
