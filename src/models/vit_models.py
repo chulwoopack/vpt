@@ -186,6 +186,7 @@ class ViT(nn.Module):
             return x, x
 
         # Reshape embedding: cls + prompt + patch -> patch
+        print("Test size(x): {}".format(x.shape))
         cls = x[:,0:1,:]
         prompt = x[:,1:self.cfg.MODEL.PROMPT.NUM_TOKENS,:]
         x = x[:,1+self.cfg.MODEL.PROMPT.NUM_TOKENS:,:] # (32,196,768)

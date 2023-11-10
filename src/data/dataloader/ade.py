@@ -3,6 +3,8 @@ import os
 import torch
 import numpy as np
 
+from ..transforms import get_transforms
+
 from PIL import Image
 from .segbase import SegmentationDataset
 
@@ -42,34 +44,60 @@ class ADE20KSegmentation(SegmentationDataset):
         root = os.path.join(root, self.BASE_DIR)
         assert os.path.exists(root), "Please setup the dataset using ../datasets/ade20k.py"
         self.images, self.masks = _get_ade20k_pairs(root, split)
+        self.transform = get_transforms(split, 224)
+
         assert (len(self.images) == len(self.masks))
         if len(self.images) == 0:
             raise RuntimeError("Found 0 images in subfolders of:" + root + "\n")
         print('Found {} images in the folder {}'.format(len(self.images), root))
 
     def __getitem__(self, index):
+        # TODO: Change 224 to be a variable
         img = Image.open(self.images[index]).convert('RGB')
-        if self.mode == 'test':
-            img = self._img_transform(img)
-            if self.transform is not None:
-                img = self.transform(img)
-            return img, os.path.basename(self.images[index])
-        mask = Image.open(self.masks[index])
-        # synchrosized transform
-        if self.mode == 'train':
-            img, mask = self._sync_transform(img, mask)
-        elif self.mode == 'val':
-            img, mask = self._val_sync_transform(img, mask)
-        else:
-            assert self.mode == 'testval'
-            img, mask = self._img_transform(img), self._mask_transform(mask)
-        # general resize, normalize and to Tensor
-        if self.transform is not None:
-            img = self.transform(img)
-        return img, mask, os.path.basename(self.images[index])
+        img = self._img_transform(img, 224)
+        # img = self.transform(img)
 
-    def _mask_transform(self, mask):
-        return torch.LongTensor(np.array(mask).astype('int32') - 1)
+        mask = Image.open(self.masks[index])
+        mask = self._mask_transform(mask, 224)
+        # if self.mode == 'test':
+        #     img = self._img_transform(img)
+        #     if self.transform is not None:
+        #         img = self.transform(img)
+        #     return img, os.path.basename(self.images[index])
+        # mask = Image.open(self.masks[index])
+        # # synchrosized transform
+        # if self.mode == 'train':
+        #     img, mask = self._sync_transform(img, mask)
+        # elif self.mode == 'val':
+        #     img, mask = self._val_sync_transform(img, mask)
+        # else:
+        #     assert self.mode == 'testval'
+        #     img, mask = self._img_transform(img), self._mask_transform(mask)
+        # # general resize, normalize and to Tensor
+        # if self.transform is not None:
+        #     img = self.transform(img)
+        # return img, mask, os.path.basename(self.images[index])
+
+
+
+        # if self.mode == 'test':
+        #     img = self.transform(img)        
+        # if self.mode == 'train':
+        #     img, mask = self.transform(img), self.transform(mask)
+        # elif self.mode == 'val':
+        #     img, mask = self.transform(img), self.transform(mask)
+        # else:
+        #     img, mask = self.transform(img), self.transform(mask)
+
+        sample = {
+            "image": img,
+            "label": mask,
+            # "id": index
+        }
+        return sample
+
+    # def _mask_transform(self, mask):
+    #     return torch.LongTensor(np.array(mask).astype('int32') - 1)
 
     def __len__(self):
         return len(self.images)

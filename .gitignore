@@ -138,3 +138,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ignore data
+src/data/ADEChallengeData2016/
+src/data/release_test/
+src/data/imagenet21k_ViT-B_16.npz
+ade20k/

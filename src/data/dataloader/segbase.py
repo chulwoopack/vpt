@@ -1,6 +1,7 @@
 """Base segmentation dataset"""
 import random
 import numpy as np
+import torch 
 
 from PIL import Image, ImageOps, ImageFilter
 
@@ -10,7 +11,7 @@ __all__ = ['SegmentationDataset']
 class SegmentationDataset(object):
     """Segmentation Base Dataset"""
 
-    def __init__(self, root, split, mode, transform, base_size=520, crop_size=480):
+    def __init__(self, root, split, mode, transform, base_size=520, crop_size=16):
         super(SegmentationDataset, self).__init__()
         self.root = root
         self.transform = transform
@@ -77,11 +78,16 @@ class SegmentationDataset(object):
         img, mask = self._img_transform(img), self._mask_transform(mask)
         return img, mask
 
-    def _img_transform(self, img):
-        return np.array(img)
+    def _img_transform(self, img, size):
+        img = img.resize([size, size], Image.BILINEAR)
+        img = np.array(img)
+        img = torch.Tensor(img).permute(2,1,0)
+        # img = float(img) / 255.0
+        return img
 
-    def _mask_transform(self, mask):
-        return np.array(mask).astype('int32')
+    def _mask_transform(self, mask, size):
+        mask = mask.resize([size, size], Image.NEAREST)
+        return np.array(mask).astype('float32')
 
     @property
     def num_class(self):

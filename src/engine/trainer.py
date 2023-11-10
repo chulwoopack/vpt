@@ -148,8 +148,9 @@ class Trainer():
         batch_time = AverageMeter('Time', ':6.3f')
         data_time = AverageMeter('Data', ':6.3f')
 
-        self.cls_weights = train_loader.dataset.get_class_weights(
-            self.cfg.DATA.CLASS_WEIGHTS_TYPE)
+        # self.cls_weights = train_loader.dataset.get_class_weights(
+            # self.cfg.DATA.CLASS_WEIGHTS_TYPE)
+        self.cls_weights = [1.0]*self.cfg.DATA.NUMBER_CLASSES
         # logger.info(f"class weights: {self.cls_weights}")
         patience = 0  # if > self.cfg.SOLVER.PATIENCE, stop training
 
@@ -177,8 +178,8 @@ class Trainer():
                     break
                 
                 X, targets = self.get_input(input_data)
-                # logger.info(X.shape)
-                # logger.info(targets.shape)
+                logger.info(X.shape)
+                logger.info(targets.shape)
                 # measure data loading time
                 data_time.update(time.time() - end)
 
@@ -280,7 +281,8 @@ class Trainer():
         losses = AverageMeter('Loss', ':.4e')
 
         log_interval = self.cfg.SOLVER.LOG_EVERY_N
-        test_name = prefix + "_" + data_loader.dataset.name
+        # test_name = prefix + "_" + data_loader.dataset.name
+        test_name = prefix + "_" + self.cfg.DATA.NAME
         total = len(data_loader)
 
         # initialize features and target

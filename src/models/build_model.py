@@ -27,9 +27,9 @@ def build_model(cfg):
     assert (
         cfg.MODEL.TYPE in _MODEL_TYPES.keys()
     ), "Model type '{}' not supported".format(cfg.MODEL.TYPE)
-    assert (
-        cfg.NUM_GPUS <= torch.cuda.device_count()
-    ), "Cannot use more GPU devices than available"
+    # assert (
+    #     cfg.NUM_GPUS <= torch.cuda.device_count()
+    # ), "Cannot use more GPU devices than available"
 
     # Construct the model
     train_type = cfg.MODEL.TYPE
@@ -55,9 +55,11 @@ def log_model_info(model, verbose=False):
 
 
 def get_current_device():
-    if torch.cuda.is_available():
+    # if torch.cuda.is_available():
+    if torch.backends.mps.is_available():
         # Determine the GPU used by the current process
-        cur_device = torch.cuda.current_device()
+        # cur_device = torch.cuda.current_device()
+        cur_device = torch.device('mps')
     else:
         cur_device = torch.device('cpu')
     return cur_device

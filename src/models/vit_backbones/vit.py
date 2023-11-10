@@ -174,6 +174,8 @@ class Embeddings(nn.Module):
 
         if self.hybrid:
             x = self.hybrid_model(x)
+
+        print("TEST: size(x) = {}".format(x.shape))
         x = self.patch_embeddings(x)
         x = x.flatten(2)
         x = x.transpose(-1, -2)
