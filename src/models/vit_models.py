@@ -16,6 +16,7 @@ from .build_vit_backbone import (
     build_mocov3_model, build_mae_model
 )
 from .mlp import MLP
+from .transconv import TRANSCONV
 from ..utils import logging
 logger = logging.get_logger("visual_prompt")
 
@@ -160,6 +161,7 @@ class ViT(nn.Module):
     # Change head to conduct segmentation
     def setup_head(self, cfg):
         self.head = nn.ConvTranspose2d(768,1,16,16)
+        # self.head = TRANSCONV(768,cfg.DATA.NUMBER_CLASSES)
         
         # self.head = MLP(
         #     input_dim=self.feat_dim,
@@ -186,7 +188,7 @@ class ViT(nn.Module):
             return x, x
 
         # Reshape embedding: cls + prompt + patch -> patch
-        print("Test size(x): {}".format(x.shape))
+        # print("Test size(x): {}".format(x.shape))
         cls = x[:,0:1,:]
         prompt = x[:,1:self.cfg.MODEL.PROMPT.NUM_TOKENS,:]
         x = x[:,1+self.cfg.MODEL.PROMPT.NUM_TOKENS:,:] # (32,196,768)

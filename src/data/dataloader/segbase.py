@@ -87,7 +87,9 @@ class SegmentationDataset(object):
 
     def _mask_transform(self, mask, size):
         mask = mask.resize([size, size], Image.NEAREST)
-        return np.array(mask).astype('float32')
+        mask = np.array(mask)
+        mask = torch.Tensor(mask).unsqueeze(0)
+        return mask
 
     @property
     def num_class(self):

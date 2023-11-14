@@ -178,8 +178,8 @@ class Trainer():
                     break
                 
                 X, targets = self.get_input(input_data)
-                logger.info(X.shape)
-                logger.info(targets.shape)
+                # logger.info(X.shape)
+                # logger.info(targets.shape)
                 # measure data loading time
                 data_time.update(time.time() - end)
 
@@ -234,23 +234,26 @@ class Trainer():
                     test_loader, "test", epoch == total_epoch - 1)
 
             # check the patience
-            t_name = "val_" + val_loader.dataset.name
-            try:
-                curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
-            except KeyError:
-                return
+            # t_name = "val_" + val_loader.dataset.name
+            t_name = "val_" + self.cfg.DATA.NAME
 
-            if curr_acc > best_metric:
-                best_metric = curr_acc
-                best_epoch = epoch + 1
-                logger.info(
-                    f'Best epoch {best_epoch}: best metric: {best_metric:.3f}')
-                patience = 0
-            else:
-                patience += 1
-            if patience >= self.cfg.SOLVER.PATIENCE:
-                logger.info("No improvement. Breaking out of loop.")
-                break
+            # try:
+            #     curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
+            # except KeyError:
+            #     print("KeyError!")
+            #     return
+
+            # if curr_acc > best_metric:
+            #     best_metric = curr_acc
+            #     best_epoch = epoch + 1
+            #     logger.info(
+            #         f'Best epoch {best_epoch}: best metric: {best_metric:.3f}')
+            #     patience = 0
+            # else:
+            #     patience += 1
+            # if patience >= self.cfg.SOLVER.PATIENCE:
+            #     logger.info("No improvement. Breaking out of loop.")
+            #     break
 
         # save the last checkpoints
         # if self.cfg.MODEL.SAVE_CKPT:
@@ -336,9 +339,9 @@ class Trainer():
 
         # save the probs and targets
         if save and self.cfg.MODEL.SAVE_CKPT:
-            out = {"targets": total_targets, "joint_logits": joint_logits}
+            # out = {"targets": total_targets, "joint_logits": joint_logits}
             out_path = os.path.join(
                 self.cfg.OUTPUT_DIR, f"{test_name}_logits.pth")
-            torch.save(out, out_path)
-            logger.info(
-                f"Saved logits and targets for {test_name} at {out_path}")
+            # torch.save(out, out_path)
+            # logger.info(
+            #     f"Saved logits and targets for {test_name} at {out_path}")

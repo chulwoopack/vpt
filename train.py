@@ -73,13 +73,13 @@ def get_loaders(cfg, logger):
     else:
         # train_loader = data_loader.construct_train_loader(cfg)
         train_dataset = get_segmentation_dataset(cfg.DATA.NAME,root=cfg.DATA.DATAPATH,split='train',mode='train')
-        train_loader = data.DataLoader(dataset=train_dataset)
+        train_loader = data.DataLoader(dataset=train_dataset, batch_size=cfg.DATA.BATCH_SIZE)
 
     logger.info("Loading validation data...")
     # not really needed for vtab
     # val_loader = data_loader.construct_val_loader(cfg)
     val_dataset = get_segmentation_dataset(cfg.DATA.NAME,root=cfg.DATA.DATAPATH,split='val',mode='train')
-    val_loader = data.DataLoader(dataset=val_dataset)
+    val_loader = data.DataLoader(dataset=val_dataset, batch_size=cfg.DATA.BATCH_SIZE)
 
     logger.info("Loading test data...")
     if cfg.DATA.NO_TEST:

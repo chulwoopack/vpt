@@ -193,6 +193,7 @@ def _get_ade20k_pairs(folder, mode='train'):
             else:
                 print('cannot find the mask:', maskpath)
 
+
     return img_paths, mask_paths
 
 

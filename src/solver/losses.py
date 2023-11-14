@@ -80,7 +80,7 @@ class MixSoftmaxCrossEntropyLoss(nn.CrossEntropyLoss):
     def _aux_forward(self, *inputs, **kwargs):
         *preds, target = tuple(inputs)
 
-        loss = super(MixSoftmaxCrossEntropyLoss, self).forward(preds[0], target)
+        loss = super(MixSoftmaxCrossEntropyLoss, self).forward(preds, target)
         for i in range(1, len(preds)):
             aux_loss = super(MixSoftmaxCrossEntropyLoss, self).forward(preds[i], target)
             loss += self.aux_weight * aux_loss
@@ -102,7 +102,43 @@ class MixSoftmaxCrossEntropyLoss(nn.CrossEntropyLoss):
             return loss
             # return dict(loss=super(MixSoftmaxCrossEntropyLoss, self).forward(*inputs))
 
+
+class MSELoss(nn.MSELoss):
+    def __init__(self, cfg=None):
+        super(MSELoss, self).__init__()
+    
+    def is_single(self):
+        return True
+
+    def is_local(self):
+        return False
+    
+    def forward(
+        self, pred_logits, targets, cfg):
+        pred_logits = pred_logits.argmax(dim=1)
+        loss = super(MSELoss, self).forward(pred_logits, targets)
+        return loss
+
+class CrossEntropyLoss(nn.CrossEntropyLoss):
+    def __init__(self, cfg=None):
+        super(CrossEntropyLoss, self).__init__()
+
+    def is_single(self):
+        return True
+
+    def is_local(self):
+        return False
+    
+    def forward(
+        self, pred_logits, targets, cfg):
+        targets = targets.squeeze()
+        print("outsize:{}\ntargetsize:{}".format(pred_logits.shape,targets.shape))
+        loss = super(CrossEntropyLoss, self).forward(pred_logits, targets)
+        return loss
+
 LOSS = {
+    "ce": CrossEntropyLoss,
+    "mse": MSELoss,
     "softmax": SoftmaxLoss,
     "mixsoftmaxcrossentropy": MixSoftmaxCrossEntropyLoss,
 }

@@ -57,7 +57,20 @@ class Evaluator():
         if multilabel:
             self._eval_multilabel(probs, targets, test_data)
         else:
-            self._eval_singlelabel(probs, targets, test_data)
+            # self._eval_singlelabel(probs, targets, test_data)
+            self._eval_singlelabel_seg(probs, targets, test_data)
+
+    def _eval_singlelabel_seg(
+        self,
+        scores: np.ndarray,
+        targets: np.ndarray,
+        eval_type: str
+    ) -> None:
+        acc_dict = {}
+        log_results = {}
+        save_results = acc_dict
+
+        self.log_and_update(log_results, save_results, eval_type)
 
     def _eval_singlelabel(
         self,
